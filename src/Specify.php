@@ -6,7 +6,7 @@
  * Time: 12:17
  */
 
-namespace App\Tests;
+namespace Barthy\BeautifySpecify;
 
 
 use PHPUnit\Framework\TestResult;

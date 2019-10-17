@@ -1,0 +1,24 @@
+{
+    "name": "barthy-koeln/beautify-specify",
+    "description": "A simple wrapper to add some color and information to the phpunit/specify console output.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Barthy",
+            "email": "post@barthy.koeln"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Barthy\\": "src/"
+        }
+    },
+    "require": {
+        "codeception/specify": "^1.2",
+        "phpunit/phpunit": "^8.4"
+    }
+}

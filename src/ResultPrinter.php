@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace Barthy\BeautifySpecify;
 
 class ResultPrinter extends \PHPUnit\TextUI\ResultPrinter
 {
