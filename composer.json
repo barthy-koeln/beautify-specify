@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Barthy\\": "src/"
+            "Barthy\\BeautifySpecify\\": "src/"
         }
     },
     "require": {
