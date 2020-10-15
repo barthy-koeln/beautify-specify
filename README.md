@@ -7,15 +7,15 @@ Add the following to your `phpunit.xml`:
 
 ```xml
 <phpunit
-  printerClass="App\Tests\ResultPrinter"
+  printerClass="Barthy\BeautifySpecify\ResultPrinter"
 />
 ```
 
-For each test case, replace any `Specify` trait with the `BeautifySpecify` trait:
+For each test case, replace any `Specify` trait with the trait provided by this library:
 
 ```php
 use App\Entity\Client;
-use App\Tests\Specify;
+use BarthyKoeln\BeautifySpecify\Specify;
 use PHPUnit\Framework\TestCase;
 
 class ClientTest extends TestCase
