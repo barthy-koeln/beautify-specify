@@ -1,5 +1,6 @@
 # beautify-specify
-A simple wrapper to add some color and information to the phpunit/specify console output.
+
+A simple wrapper to add some color and information to the phpunit/specify **bash** output.
 
 ## Output
 
@@ -18,7 +19,10 @@ Add the following to your `phpunit.xml`:
 Please note that currently the only task of this result printer is not printing any progress or failures.
 The output is handled entirely in the Specify wrapper.
 
-For each test case, replace any `Specify` trait with the trait provided by this library:
+For each test case, replace any `Specify` trait with the trait provided by this library.
+Then, use the Specify framework as always and as [described in the documentation](https://github.com/Codeception/Specify).
+
+## Example:
 
 ```php
 use BarthyKoeln\BeautifySpecify\Specify;
@@ -47,5 +51,3 @@ class SomeClassTest extends TestCase
     }
 }
 ```
-
-Then, use the Specify framework as always and as [described in the documentation](https://github.com/Codeception/Specify).
