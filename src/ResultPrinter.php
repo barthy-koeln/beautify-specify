@@ -1,8 +1,11 @@
 <?php
 
-namespace Barthy\BeautifySpecify;
+namespace BarthyKoeln\BeautifySpecify;
 
-class ResultPrinter extends \PHPUnit\TextUI\ResultPrinter
+use PHPUnit\Framework\TestResult;
+use PHPUnit\TextUI\DefaultResultPrinter;
+
+class ResultPrinter extends DefaultResultPrinter
 {
 
     /**
@@ -10,6 +13,11 @@ class ResultPrinter extends \PHPUnit\TextUI\ResultPrinter
      */
     protected function writeProgress(string $progress): void
     {
-        return;
+        // Do nothing
+    }
+
+    protected function printFailures(TestResult $result): void
+    {
+        // Do nothing
     }
 }

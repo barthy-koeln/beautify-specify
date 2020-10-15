@@ -1,29 +1,50 @@
 # beautify-specify
 A simple wrapper to add some color and information to the phpunit/specify console output.
 
+## Output
+
+![Image of BeautifySpecify Output](./BeautifySpecify.png)
+
 ## Usage
 
 Add the following to your `phpunit.xml`:
 
 ```xml
 <phpunit
-  printerClass="Barthy\BeautifySpecify\ResultPrinter"
+  printerClass="BarthyKoeln\BeautifySpecify\ResultPrinter"
 />
 ```
+
+Please note that currently the only task of this result printer is not printing any progress or failures.
+The output is handled entirely in the Specify wrapper.
 
 For each test case, replace any `Specify` trait with the trait provided by this library:
 
 ```php
-use App\Entity\Client;
 use BarthyKoeln\BeautifySpecify\Specify;
 use PHPUnit\Framework\TestCase;
 
-class ClientTest extends TestCase
+class SomeClassTest extends TestCase
 {
-  
-  use Specify;
+    use Specify;
 
-  // […]
+    public function testValidation()
+    {
+        $this->describe(
+            'SomeClass',
+            function () {
+                $this->it(
+                    'has the correct default values',
+                    function () {
+                        $this->assertEquals([3.14159,  2.71828], $this->someClass->getValues());
+                    }
+                );
+
+                // […]
+
+            }
+        );
+    }
 }
 ```
 
