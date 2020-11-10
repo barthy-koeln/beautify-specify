@@ -6,6 +6,12 @@ A simple wrapper to add some color and information to the phpunit/specify **bash
 
 ![Image of BeautifySpecify Output](./BeautifySpecify.png)
 
+## Installation
+
+```shell-script
+composer require --dev phpunit/phpunit barthy-koeln/beautify-specify
+```
+
 ## Usage
 
 Add the following to your `phpunit.xml`:
