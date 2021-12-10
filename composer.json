@@ -1,6 +1,6 @@
 {
     "name": "barthy-koeln/beautify-specify",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A simple wrapper to add some color and information to the phpunit/specify console output.",
     "type": "library",
     "license": "MIT",
@@ -19,6 +19,6 @@
         }
     },
     "require": {
-        "codeception/specify": "^1.2"
+        "codeception/specify": "^2.0.0"
     }
 }

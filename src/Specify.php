@@ -3,13 +3,13 @@
 namespace BarthyKoeln\BeautifySpecify;
 
 use Closure;
+use Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\PHPTAssertionFailedError;
 use PHPUnit\Framework\TestFailure;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Util\Printer;
 use ReflectionClass;
-use ReflectionException;
 
 trait Specify
 {
@@ -28,10 +28,9 @@ trait Specify
         \Codeception\Specify::runSpec as baseSpecify;
     }
 
-
     public function describe($specification, Closure $callable = null): void
     {
-        $this->getPrinter()->write("\n\n{$this->bold}{$this->underline}{$this->blue}{$specification}:{$this->reset}\n");
+        $this->write("\n\n{$this->bold}{$this->underline}{$this->blue}{$specification}:{$this->reset}\n");
         $this->baseDescribe($specification, $callable);
     }
 
@@ -42,6 +41,11 @@ trait Specify
         }
 
         return $this->printer;
+    }
+
+    private function write(string $buffer): void
+    {
+        $this->getPrinter()->write($buffer);
     }
 
     public function runSpec($specification, Closure $callable = null, $params = []): void
@@ -56,56 +60,79 @@ trait Specify
 
         $testResult = $this->getTestResultObject();
 
-        if (!($testResult instanceof TestResult)) {
+        if (!$testResult instanceof TestResult) {
             return;
         }
 
         if (strlen($this->specifyName) !== 0) {
-            $failureCount = $testResult->failureCount();
-
-            $this->baseSpecify($specification, $callable, $params);
-
-            if ($testResult->failureCount() > $failureCount) {
-                $this->getPrinter()->write("  {$this->red}[FAILED]{$this->reset}");
-                $failure = $testResult->failures()[$testResult->failureCount() - 1];
-
-            } else {
-                $this->getPrinter()->write("  {$this->green}[PASSED]{$this->reset}");
-                $failure = null;
+            try {
+                $this->handleSpecifyCase($testResult, $specification, $callable, $params);
+            } catch (Exception $_) {
+                return;
             }
-
-            $this->getPrinter()->write(" … {$specification}\n");
-
-            if ($failure instanceof TestFailure) {
-                $exception = $failure->thrownException();
-                $this->getPrinter()->write("    ↳ {$this->blue}[REASON]{$this->reset} {$exception->getMessage()}\n");
-
-                if ($exception instanceof ExpectationFailedException && $exception->getComparisonFailure()) {
-                    $this->getPrinter()->write($exception->getComparisonFailure()->getDiff());
-                }
-
-                if ($exception instanceof PHPTAssertionFailedError) {
-                    $this->getPrinter()->write($exception->getDiff());
-                }
-
-                try {
-                    $reflection = new ReflectionClass(get_class());
-                    $classFileName = $reflection->getFileName();
-                    $trace = $exception->getTrace();
-                    foreach($trace as $crumb){
-                        if($crumb['file'] === $classFileName){
-                            $this->getPrinter()->write("    ↳ {$this->blue}[LOCATION]{$this->reset} {$crumb['file']} at line {$crumb['line']}\n");
-                            return;
-                        }
-                    }
-                } catch (ReflectionException $e) {
-                    return;
-                }
-            }
-
-            return;
         }
 
         $this->baseSpecify($specification, $callable, $params);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function handleSpecifyCase(TestResult $testResult, $specification, ?Closure $callable, array $params): void
+    {
+        $failureCountBefore = $testResult->failureCount();
+        $this->baseSpecify($specification, $callable, $params);
+        $failureCountAfter = $testResult->failureCount();
+
+        $failure = $this->printAndGetResult($testResult, $failureCountAfter, $failureCountBefore);
+
+        $this->write(" … {$specification}\n");
+
+        if (!$failure instanceof TestFailure) {
+            return;
+        }
+
+        $exception = $failure->thrownException();
+        $this->write("    ↳ {$this->blue}[REASON]{$this->reset} {$exception->getMessage()}\n");
+
+        if ($exception instanceof ExpectationFailedException && $exception->getComparisonFailure()) {
+            $this->write($exception->getComparisonFailure()->getDiff());
+        }
+
+        if ($exception instanceof PHPTAssertionFailedError) {
+            $this->write($exception->getDiff());
+        }
+
+        $reflection    = new ReflectionClass(get_class());
+        $classFileName = $reflection->getFileName();
+        $trace         = $exception->getTrace();
+
+        foreach ($trace as $crumb) {
+            if ($crumb['file'] !== $classFileName) {
+                continue;
+            }
+
+            $this->write(
+                "    ↳ {$this->blue}[LOCATION]{$this->reset} {$crumb['file']} at line {$crumb['line']}\n"
+            );
+
+            throw new Exception();
+        }
+    }
+
+    private function printAndGetResult(
+        TestResult $testResult,
+        int $failureCountAfter,
+        int $failureCountBefore
+    ): ?TestFailure {
+        if ($failureCountAfter > $failureCountBefore) {
+            $this->write("  {$this->red}[FAILED]{$this->reset}");
+
+            return $testResult->failures()[$testResult->failureCount() - 1];
+        }
+
+        $this->write("  {$this->green}[PASSED]{$this->reset}");
+
+        return null;
     }
 }
