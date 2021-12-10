@@ -25,7 +25,7 @@ trait Specify
 
     use \Codeception\Specify {
         \Codeception\Specify::describe as baseDescribe;
-        \Codeception\Specify::runSpec as baseSpecify;
+        \Codeception\Specify::runSpec as baseRunSpec;
     }
 
     public function describe($specification, Closure $callable = null): void
@@ -64,15 +64,19 @@ trait Specify
             return;
         }
 
-        if (strlen($this->specifyName) !== 0) {
-            try {
-                $this->handleSpecifyCase($testResult, $specification, $callable, $params);
-            } catch (Exception $_) {
-                return;
-            }
+        $isSpecifyCase = strlen($this->specifyName) !== 0;
+
+        if (!$isSpecifyCase) {
+            $this->baseRunSpec($specification, $callable, $params);
+
+            return;
         }
 
-        $this->baseSpecify($specification, $callable, $params);
+        try {
+            $this->handleSpecifyCase($testResult, $specification, $callable, $params);
+        } catch (Exception $_) {
+            return;
+        }
     }
 
     /**
@@ -81,7 +85,7 @@ trait Specify
     private function handleSpecifyCase(TestResult $testResult, $specification, ?Closure $callable, array $params): void
     {
         $failureCountBefore = $testResult->failureCount();
-        $this->baseSpecify($specification, $callable, $params);
+        $this->baseRunSpec($specification, $callable, $params);
         $failureCountAfter = $testResult->failureCount();
 
         $failure = $this->printAndGetResult($testResult, $failureCountAfter, $failureCountBefore);
