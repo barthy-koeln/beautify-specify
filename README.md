@@ -9,7 +9,7 @@ A simple wrapper to add some color and information to the phpunit/specify **bash
 ## Installation
 
 ```shell-script
-composer require --dev phpunit/phpunit barthy-koeln/beautify-specify
+composer require --dev barthy-koeln/beautify-specify
 ```
 
 ## Usage
