@@ -1,6 +1,6 @@
 # beautify-specify
 
-A simple wrapper to add some color and information to the phpunit/specify **bash** output.
+A simple wrapper to add some color and information to the phpunit/specify **terminal** output.
 
 Note: This is kiiind of hackaround. But it works.
 
