@@ -2,6 +2,8 @@
 
 A simple wrapper to add some color and information to the phpunit/specify **bash** output.
 
+Note: This is kiiind of hackaround. But it works.
+
 ## Output
 
 ![Image of BeautifySpecify Output](./BeautifySpecify.png)
